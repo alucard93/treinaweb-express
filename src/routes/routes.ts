@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express'
-import { makeBookController } from './factories/book/make-book-controller'
+import { makeBookController } from '../factories/book/make-book-controller'
 
 const router = express.Router()
 
