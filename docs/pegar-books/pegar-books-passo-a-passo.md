@@ -38,7 +38,6 @@ model Book {
   publishedAt Int?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  teste       String
 }
 ```
 
