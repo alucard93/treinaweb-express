@@ -24,14 +24,12 @@ model Book {
   publishedAt Int?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  teste       String
 }
 ```
 
 No estado atual:
 
 - `title` e obrigatorio
-- `teste` e obrigatorio
 - `isbn` e opcional
 - `publishedAt` e opcional
 - `id`, `createdAt` e `updatedAt` sao gerados automaticamente
@@ -50,7 +48,7 @@ Body:
 ```json
 {
   "title": "Clean Code",
-  "teste": "valor de exemplo",
+
   "isbn": "9780132350884",
   "publishedAt": 2008
 }
@@ -68,7 +66,6 @@ Se a criacao der certo, a API retorna `201` com o registro criado:
   "publishedAt": 2008,
   "createdAt": "2026-03-29T21:13:53.207Z",
   "updatedAt": "2026-03-29T21:13:53.207Z",
-  "teste": "valor de exemplo"
 }
 ```
 

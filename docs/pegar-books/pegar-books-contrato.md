@@ -30,7 +30,6 @@ model Book {
   publishedAt Int?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  teste       String
 }
 ```
 
@@ -55,7 +54,6 @@ Se a listagem der certo, a API retorna `200` com um array:
     "publishedAt": 2008,
     "createdAt": "2026-03-29T21:13:53.207Z",
     "updatedAt": "2026-03-29T21:13:53.207Z",
-    "teste": "valor de exemplo"
   },
   {
     "id": "0ac4d3a1-3d4c-4d79-a8c7-a4109f31e7f2",
@@ -64,7 +62,6 @@ Se a listagem der certo, a API retorna `200` com um array:
     "publishedAt": 1999,
     "createdAt": "2026-03-29T21:18:12.100Z",
     "updatedAt": "2026-03-29T21:18:12.100Z",
-    "teste": "outro exemplo"
   }
 ]
 ```

@@ -40,7 +40,6 @@ model Book {
   publishedAt Int?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  teste       String
 }
 ```
 
@@ -182,7 +181,6 @@ Body de exemplo:
 ```json
 {
   "title": "Clean Code",
-  "teste": "valor de exemplo",
   "isbn": "9780132350884",
   "publishedAt": 2008
 }
