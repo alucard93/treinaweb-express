@@ -73,7 +73,7 @@ No arquivo `prisma/schema.prisma`, defina o generator, datasource e os models da
 
 ```prisma
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
