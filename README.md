@@ -5,6 +5,8 @@ Projeto base com Node.js, Express e TypeScript.
 ## Documentacao
 
 - [Setup do projeto](./docs/setup.md)
+- [Como criar uma nova rota](./docs/criar-rota.md)
+- [Como criar um novo middleware](./docs/criar-middleware.md)
 
 ## Scripts
 
@@ -20,6 +22,8 @@ src/
   app.ts
 docs/
   setup.md
+  criar-rota.md
+  criar-middleware.md
 dist/
 package.json
 tsconfig.json
