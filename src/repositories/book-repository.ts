@@ -8,4 +8,8 @@ export class BookRepository {
       data: book,
     })
   }
+
+  async getBooks() {
+    return await this.prisma.book.findMany()
+  }
 }

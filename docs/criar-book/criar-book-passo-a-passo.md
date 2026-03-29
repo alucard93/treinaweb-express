@@ -129,13 +129,13 @@ O controller vem depois porque ele depende do service para executar a acao.
 
 ## 7. Criar a factory
 
-Com repository, service e controller prontos, crie a composicao da feature em [../src/factories/make-book-controller.ts](../src/factories/make-book-controller.ts).
+Com repository, service e controller prontos, crie a composicao da feature em [../../src/factories/book/make-book-controller.ts](../../src/factories/book/make-book-controller.ts).
 
 ```ts
-import { BookController } from '../controllers/book-controllers'
-import { prisma } from '../lib/prisma'
-import { BookRepository } from '../repositories/book-repository'
-import { BookService } from '../services/book-service'
+import { BookController } from '../../controllers/book-controllers'
+import { prisma } from '../../lib/prisma'
+import { BookRepository } from '../../repositories/book-repository'
+import { BookService } from '../../services/book-service'
 
 export function makeBookController() {
   const bookRepository = new BookRepository(prisma)
@@ -153,7 +153,7 @@ Depois da factory pronta, registre o endpoint em [../src/routes.ts](../src/route
 
 ```ts
 import express, { Request, Response } from 'express'
-import { makeBookController } from './factories/make-book-controller'
+import { makeBookController } from './factories/book/make-book-controller'
 
 const router = express.Router()
 

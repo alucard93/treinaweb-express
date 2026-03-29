@@ -1,17 +1,17 @@
-# Como funciona a criacao de book
+# Como funciona a listagem de books
 
-Este documento explica o padrao arquitetural usado pelo time na feature de criacao de `book`.
+Este documento explica o padrao arquitetural usado pelo time na feature de listagem de `books`.
 
 O objetivo aqui e mostrar:
 
 - o fluxo da requisicao
 - a separacao em camadas
 - onde entra a injecao de dependencia
-- por que a composicao foi movida para uma factory
+- por que a mesma factory do modulo de `book` continua sendo usada
 
-Se a duvida for sobre payload, campos aceitos ou exemplo de request/response do endpoint, consulte [criar-book-contrato.md](./criar-book-contrato.md).
+Se a duvida for sobre contrato do endpoint, consulte [pegar-books-contrato.md](./pegar-books-contrato.md).
 
-Se a duvida for sobre a ordem recomendada de implementacao da feature, consulte [criar-book-passo-a-passo.md](./criar-book-passo-a-passo.md).
+Se a duvida for sobre a ordem recomendada de implementacao da feature, consulte [pegar-books-passo-a-passo.md](./pegar-books-passo-a-passo.md).
 
 ## 1. Fluxo da requisicao
 
@@ -25,15 +25,15 @@ O fluxo da requisicao e este:
 
 Na pratica:
 
-- a rota recebe o `POST /book`
+- a rota recebe o `GET /books`
 - o controller lida com `req` e `res`
 - o service centraliza a regra da feature
-- o repository faz a persistencia
-- o Prisma executa o insert no banco
+- o repository faz a consulta no banco
+- o Prisma executa o `findMany`
 
 ## 2. Tipo de arquitetura
 
-Neste modulo, o projeto usa arquitetura em camadas.
+Nesta feature, o projeto continua usando arquitetura em camadas.
 
 Cada camada tem uma responsabilidade clara:
 
@@ -43,13 +43,11 @@ Cada camada tem uma responsabilidade clara:
 - `repository`: acessar banco
 - `prisma`: comunicar com o datasource
 
-Isso evita misturar regra de negocio com detalhes de framework ou banco no mesmo arquivo.
+Isso evita misturar consulta ao banco com preocupacoes de HTTP no mesmo arquivo.
 
 ## 3. Injecao de dependencia
 
 O projeto usa injecao de dependencia por construtor.
-
-Isso quer dizer que cada classe recebe no `constructor` aquilo de que precisa, em vez de instanciar tudo internamente.
 
 Exemplo no controller:
 
@@ -71,12 +69,21 @@ Esse padrao ajuda o time porque:
 
 - reduz acoplamento
 - facilita testes
-- deixa a composicao mais previsivel
-- centraliza a montagem das dependencias
+- deixa a composicao previsivel
+- reaproveita a mesma estrutura do modulo de `book`
 
-## 4. Factory de composicao
+## 4. Por que a mesma factory e usada
 
-A feature usa uma factory para montar `controller`, `service` e `repository`.
+Na listagem de `books`, nao foi criada outra factory porque a composicao da feature continua a mesma.
+
+As dependencias ainda sao:
+
+- `BookController`
+- `BookService`
+- `BookRepository`
+- `prisma`
+
+Como a listagem usa o mesmo controller, o mesmo service e o mesmo repository, a mesma factory do modulo continua suficiente.
 
 A factory fica em [../../src/factories/book/make-book-controller.ts](../../src/factories/book/make-book-controller.ts).
 
@@ -94,10 +101,6 @@ export function makeBookController() {
 }
 ```
 
-O papel da factory e apenas compor a feature.
-
-Ela nao processa request e nao executa regra de negocio. Ela so monta as dependencias na ordem correta.
-
 ## 5. Route
 
 A rota fica em [../../src/routes.ts](../../src/routes.ts).
@@ -110,8 +113,8 @@ const router = express.Router()
 
 const bookController = makeBookController()
 
-router.post('/book', (req: Request, res: Response) => {
-  bookController.createBook(req, res)
+router.get('/books', (req: Request, res: Response) => {
+  bookController.getBooks(req, res)
 })
 
 export default router
@@ -119,7 +122,7 @@ export default router
 
 Aqui a rota faz so duas coisas:
 
-- registra `POST /book`
+- registra `GET /books`
 - chama o controller
 
 ## 6. Controller
@@ -133,14 +136,13 @@ import { BookService } from '../services/book-service'
 export class BookController {
   constructor(private bookService: BookService) {}
 
-  async createBook(req: Request, res: Response) {
+  async getBooks(req: Request, res: Response) {
     try {
-      const bookData = req.body
-      const newBook = await this.bookService.createBook(bookData)
-      return res.status(201).json(newBook)
+      const books = await this.bookService.getBooks()
+      return res.status(200).json(books)
     } catch (error) {
-      console.error('Failed to create book', error)
-      return res.status(500).json({ error: 'Failed to create book' })
+      console.error('Failed to get books', error)
+      return res.status(500).json({ error: 'Failed to get books' })
     }
   }
 }
@@ -148,44 +150,41 @@ export class BookController {
 
 No time, o controller deve cuidar de preocupacoes HTTP:
 
-- ler `req`
-- devolver `res`
+- receber a requisicao
+- devolver a resposta
 - definir status code
-- delegar o trabalho para o service
+- delegar a acao para o service
 
 ## 7. Service
 
 O service fica em [../../src/services/book-service.ts](../../src/services/book-service.ts).
 
 ```ts
-import { Prisma } from '../../generated/prisma/client'
 import { BookRepository } from '../repositories/book-repository'
 
 export class BookService {
   constructor(private bookRepository: BookRepository) {}
 
-  async createBook(book: Prisma.BookCreateInput) {
-    return await this.bookRepository.createBook(book)
+  async getBooks() {
+    return await this.bookRepository.getBooks()
   }
 }
 ```
 
-Hoje ele so encaminha a criacao, mas esta e a camada correta para regra de negocio quando a feature crescer.
+Hoje ele apenas encaminha a listagem, mas esta continua sendo a camada correta para regras futuras como filtros, ordenacao ou paginacao.
 
 ## 8. Repository
 
 O repository fica em [../../src/repositories/book-repository.ts](../../src/repositories/book-repository.ts).
 
 ```ts
-import { Prisma, PrismaClient } from '../../generated/prisma/client'
+import { PrismaClient } from '../../generated/prisma/client'
 
 export class BookRepository {
   constructor(private prisma: PrismaClient) {}
 
-  async createBook(book: Prisma.BookCreateInput) {
-    return await this.prisma.book.create({
-      data: book,
-    })
+  async getBooks() {
+    return await this.prisma.book.findMany()
   }
 }
 ```
@@ -198,12 +197,12 @@ Para o time, a regra aqui e:
 
 ## 9. Resumo para o time
 
-Quando formos criar features parecidas, a ideia e manter este padrao:
+Quando formos criar listagens parecidas, a ideia e manter este padrao:
 
 1. rota simples
 2. controller tratando HTTP
 3. service tratando regra de negocio
-4. repository tratando persistencia
-5. factory montando as dependencias
+4. repository tratando consulta
+5. factory reaproveitada quando a composicao for a mesma
 
-Esse e o padrao atual do modulo de `book`.
+Esse e o padrao atual da listagem de `books`.

@@ -14,4 +14,14 @@ export class BookController {
       return res.status(500).json({ error: 'Failed to create book' })
     }
   }
+
+  async getBooks(req: Request, res: Response) {
+    try {
+      const books = await this.bookService.getBooks()
+      return res.status(200).json(books)
+    } catch (error) {
+      console.error('Failed to get books', error)
+      return res.status(500).json({ error: 'Failed to get books' })
+    }
+  }
 }

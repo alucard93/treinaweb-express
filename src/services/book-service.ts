@@ -7,4 +7,8 @@ export class BookService {
   async createBook(book: Prisma.BookCreateInput) {
     return await this.bookRepository.createBook(book)
   }
+
+  async getBooks() {
+    return await this.bookRepository.getBooks()
+  }
 }
