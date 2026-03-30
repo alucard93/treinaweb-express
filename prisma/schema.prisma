@@ -21,6 +21,8 @@ model Book {
   updatedAt   DateTime  @updatedAt
   publisher   Publisher @relation(fields: [publisherId], references: [id], onDelete: Cascade)
   publisherId String
+
+  bookAuthors BookAuthor[]
 }
 
 model Publisher {
@@ -29,4 +31,20 @@ model Publisher {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   books     Book[]
+}
+
+model Author {
+  id        String       @id @default(uuid())
+  name      String
+  bio       String?
+  createdAt DateTime     @default(now())
+  books     BookAuthor[]
+}
+
+model BookAuthor {
+  id       String @id @default(uuid())
+  book     Book   @relation(fields: [bookId], references: [id])
+  author   Author @relation(fields: [authorId], references: [id])
+  authorId String
+  bookId   String
 }
