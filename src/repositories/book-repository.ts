@@ -15,6 +15,13 @@ export class BookRepository {
         publisher: {
           select: { name: true },
         },
+        bookAuthors: {
+          include: {
+            author: {
+              select: { id: true, name: true },
+            },
+          },
+        },
       },
     })
   }
