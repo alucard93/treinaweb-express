@@ -19,7 +19,7 @@ model Book {
   publishedAt Int?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  publisher   Publisher @relation(fields: [publisherId], references: [id])
+  publisher   Publisher @relation(fields: [publisherId], references: [id], onDelete: Cascade)
   publisherId String
 }
 
@@ -28,5 +28,5 @@ model Publisher {
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  books      Book[]
+  books     Book[]
 }
