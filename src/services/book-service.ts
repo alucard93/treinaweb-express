@@ -15,4 +15,8 @@ export class BookService {
   async getBookById(id: string) {
     return await this.bookRepository.getBookById(id)
   }
+
+  async updateBook(id: string, book: Prisma.BookUpdateInput) {
+    return await this.bookRepository.updateBook(id, book)
+  }
 }

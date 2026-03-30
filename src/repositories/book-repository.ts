@@ -18,4 +18,11 @@ export class BookRepository {
       where: { id },
     })
   }
+
+  async updateBook(id: string, book: Prisma.BookUpdateInput) {
+    return await this.prisma.book.update({
+      where: { id },
+      data: book,
+    })
+  }
 }

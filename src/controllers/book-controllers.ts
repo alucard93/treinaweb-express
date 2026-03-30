@@ -43,4 +43,21 @@ export class BookController {
       return res.status(500).json({ error: 'Failed to get book' })
     }
   }
+
+  async updateBook(req: Request, res: Response) {
+    try {
+      const { id } = req.params
+      const bookData = req.body
+
+      if (typeof id !== 'string') {
+        return res.status(400).json({ error: 'Invalid book id' })
+      }
+      
+      const updatedBook = await this.bookService.updateBook(id, bookData)
+      return res.status(200).json(updatedBook)
+    } catch (error) {
+      console.error('Failed to update book', error)
+      return res.status(500).json({ error: 'Failed to update book' })
+    }
+  }
 }

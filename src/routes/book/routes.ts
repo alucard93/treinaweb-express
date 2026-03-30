@@ -17,4 +17,8 @@ router.get('/book/:id', (req: Request, res: Response) => {
   bookController.getBookById(req, res)
 })
 
+router.patch('/book/:id', (req: Request, res: Response) => {
+  bookController.updateBook(req, res)
+})
+
 export default router
