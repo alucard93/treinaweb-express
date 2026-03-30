@@ -24,4 +24,23 @@ export class BookController {
       return res.status(500).json({ error: 'Failed to get books' })
     }
   }
+
+  async getBookById(req: Request, res: Response) {
+    try {
+      const { id } = req.params
+
+      if (typeof id !== 'string') {
+        return res.status(400).json({ error: 'Invalid book id' })
+      }
+
+      const book = await this.bookService.getBookById(id)
+      if (!book) {
+        return res.status(404).json({ error: 'Book not found' })
+      }
+      return res.status(200).json(book)
+    } catch (error) {
+      console.error('Failed to get book', error)
+      return res.status(500).json({ error: 'Failed to get book' })
+    }
+  }
 }

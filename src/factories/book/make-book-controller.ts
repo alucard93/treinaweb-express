@@ -9,9 +9,3 @@ export function makeBookController() {
 
   return new BookController(bookService)
 }
-
-export function makeGetBooksController() {
-  const bookRepository = new BookRepository(prisma)
-  const bookService = new BookService(bookRepository)
-  return new BookController(bookService)
-}

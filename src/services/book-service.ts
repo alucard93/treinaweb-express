@@ -11,4 +11,8 @@ export class BookService {
   async getBooks() {
     return await this.bookRepository.getBooks()
   }
+
+  async getBookById(id: string) {
+    return await this.bookRepository.getBookById(id)
+  }
 }

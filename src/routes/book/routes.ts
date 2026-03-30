@@ -13,4 +13,8 @@ router.get('/books', (req: Request, res: Response) => {
   bookController.getBooks(req, res)
 })
 
+router.get('/book/:id', (req: Request, res: Response) => {
+  bookController.getBookById(req, res)
+})
+
 export default router

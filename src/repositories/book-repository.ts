@@ -12,4 +12,10 @@ export class BookRepository {
   async getBooks() {
     return await this.prisma.book.findMany()
   }
+
+  async getBookById(id: string) {
+    return await this.prisma.book.findUnique({
+      where: { id },
+    })
+  }
 }
