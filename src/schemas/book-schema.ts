@@ -13,6 +13,10 @@ export const createBookRequestSchema = z.object({
       .min(1, 'title não pode ser vazio'),
     isbn: z.string().trim().optional(),
     publishedAt: z.coerce.number().int().positive().optional(),
+    publisherId: z
+      .uuid('publisherId invalido')
+      .trim()
+      .min(1, 'publisherId é obrigatório'),
   }),
 })
 
@@ -25,6 +29,7 @@ export const updateBookRequestSchema = z.object({
       title: z.string().trim().min(1).optional(),
       isbn: z.string().trim().optional(),
       publishedAt: z.coerce.number().int().positive().optional(),
+      publisherId: z.uuid('publisherId invalido').optional(),
     })
     .refine((data) => Object.keys(data).length > 0, {
       message: 'envie ao menos um campo para atualizar',
