@@ -10,12 +10,29 @@ export class PublisherRepository {
   }
 
   async getPublishers() {
-    return await this.prisma.publisher.findMany()
+    return await this.prisma.publisher.findMany({
+      include: {
+        books: {
+          select: {
+            title: true,
+            isbn: true,
+          },
+        },
+      },
+    })
   }
 
   async getPublisherById(id: string) {
     return await this.prisma.publisher.findUnique({
       where: { id },
+      include: {
+        books: {
+          select: {
+            title: true,
+            isbn: true,
+          },
+        },
+      },
     })
   }
 
