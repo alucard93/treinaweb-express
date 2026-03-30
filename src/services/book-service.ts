@@ -1,4 +1,5 @@
 import { BookRepository } from '../repositories/book-repository'
+import { BookNotFoundError } from '../errors/book-not-found-error'
 import { CreateBookBody, UpdateBookBody } from '../schemas/book-schema'
 
 export class BookService {
@@ -25,7 +26,13 @@ export class BookService {
   }
 
   async getBookById(id: string) {
-    return await this.bookRepository.getBookById(id)
+    const book = await this.bookRepository.getBookById(id)
+
+    if (!book) {
+      throw new BookNotFoundError(id)
+    }
+
+    return book
   }
 
   async updateBook(id: string, book: UpdateBookBody) {
@@ -41,10 +48,20 @@ export class BookService {
 
     if (book.publishedAt !== undefined) data.publishedAt = book.publishedAt
 
-    return await this.bookRepository.updateBook(id, data)
+    const updatedBook = await this.bookRepository.updateBook(id, data)
+
+    if (!updatedBook) {
+      throw new BookNotFoundError(id)
+    }
+
+    return updatedBook
   }
 
   async deleteBook(id: string) {
-    return await this.bookRepository.deleteBook(id)
+    const deleted = await this.bookRepository.deleteBook(id)
+
+    if (!deleted) {
+      throw new BookNotFoundError(id)
+    }
   }
 }

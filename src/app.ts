@@ -1,4 +1,5 @@
 import express from 'express'
+import { errorHandler } from './middlewares/error-handler'
 import router from './routes/book/routes'
 
 const app = express()
@@ -11,6 +12,8 @@ app.use('/', router)
 app.get('/', (req, res) => {
   res.send('Hello World!')
 })
+
+app.use(errorHandler)
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`)

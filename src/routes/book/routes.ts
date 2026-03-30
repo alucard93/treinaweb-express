@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express'
+import express, { NextFunction, Request, Response } from 'express'
 import { makeBookController } from '../../factories/book/make-book-controller'
 import {
   bookIdRequestSchema,
@@ -14,36 +14,36 @@ const bookController = makeBookController()
 router.post(
   '/book',
   validate(createBookRequestSchema),
-  (req: Request, res: Response) => {
-    bookController.createBook(req, res)
+  (req: Request, res: Response, next: NextFunction) => {
+    return bookController.createBook(req, res, next)
   },
 )
 
-router.get('/books', (req: Request, res: Response) => {
-  bookController.getBooks(req, res)
+router.get('/books', (req: Request, res: Response, next: NextFunction) => {
+  return bookController.getBooks(req, res, next)
 })
 
 router.get(
   '/book/:id',
   validate(bookIdRequestSchema),
-  (req: Request, res: Response) => {
-    bookController.getBookById(req, res)
+  (req: Request, res: Response, next: NextFunction) => {
+    return bookController.getBookById(req, res, next)
   },
 )
 
 router.patch(
   '/book/:id',
   validate(updateBookRequestSchema),
-  (req: Request, res: Response) => {
-    bookController.updateBook(req, res)
+  (req: Request, res: Response, next: NextFunction) => {
+    return bookController.updateBook(req, res, next)
   },
 )
 
 router.delete(
   '/book/:id',
   validate(bookIdRequestSchema),
-  (req: Request, res: Response) => {
-    bookController.deleteBook(req, res)
+  (req: Request, res: Response, next: NextFunction) => {
+    return bookController.deleteBook(req, res, next)
   },
 )
 

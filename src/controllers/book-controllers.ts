@@ -1,39 +1,38 @@
-import { Request, Response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 import { BookService } from '../services/book-service'
 
 export class BookController {
   constructor(private bookService: BookService) {}
 
-  async createBook(req: Request, res: Response) {
+  async createBook(req: Request, res: Response, next: NextFunction) {
     try {
       const newBook = await this.bookService.createBook(req.body)
       return res.status(201).json(newBook)
     } catch (error) {
-      return res.status(500).json({ error: 'Failed to create book' })
+      return next(error)
     }
   }
 
-  async getBooks(req: Request, res: Response) {
+  async getBooks(req: Request, res: Response, next: NextFunction) {
     try {
       const books = await this.bookService.getBooks()
       return res.status(200).json(books)
     } catch (error) {
-      console.error('Failed to get books', error)
-      return res.status(500).json({ error: 'Failed to get books' })
+      return next(error)
     }
   }
 
-  async getBookById(req: Request, res: Response) {
+  async getBookById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params
       const book = await this.bookService.getBookById(id as string)
       return res.status(200).json(book)
     } catch (error) {
-      return res.status(500).json({ error: 'Failed to get book' })
+      return next(error)
     }
   }
 
-  async updateBook(req: Request, res: Response) {
+  async updateBook(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params
       const body = req.body
@@ -43,17 +42,17 @@ export class BookController {
       )
       return res.status(200).json(updatedBook)
     } catch (error) {
-      return res.status(500).json({ error: 'Failed to update book' })
+      return next(error)
     }
   }
 
-  async deleteBook(req: Request, res: Response) {
+  async deleteBook(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params
       await this.bookService.deleteBook(id as string)
       return res.status(204).send()
     } catch (error) {
-      return res.status(500).json({ error: 'Failed to delete book' })
+      return next(error)
     }
   }
 }

@@ -20,15 +20,39 @@ export class BookRepository {
   }
 
   async updateBook(id: string, book: Prisma.BookUpdateInput) {
-    return await this.prisma.book.update({
-      where: { id },
-      data: book,
-    })
+    try {
+      return await this.prisma.book.update({
+        where: { id },
+        data: book,
+      })
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        return null
+      }
+
+      throw error
+    }
   }
 
   async deleteBook(id: string) {
-    return await this.prisma.book.delete({
-      where: { id },
-    })
+    try {
+      await this.prisma.book.delete({
+        where: { id },
+      })
+
+      return true
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        return false
+      }
+
+      throw error
+    }
   }
 }
