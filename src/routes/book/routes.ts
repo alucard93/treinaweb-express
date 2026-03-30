@@ -21,4 +21,8 @@ router.patch('/book/:id', (req: Request, res: Response) => {
   bookController.updateBook(req, res)
 })
 
+router.delete('/book/:id', (req: Request, res: Response) => {
+  bookController.deleteBook(req, res)
+})
+
 export default router

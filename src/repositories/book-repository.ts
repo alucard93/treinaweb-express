@@ -25,4 +25,10 @@ export class BookRepository {
       data: book,
     })
   }
+
+  async deleteBook(id: string) {
+    return await this.prisma.book.delete({
+      where: { id },
+    })
+  }
 }
