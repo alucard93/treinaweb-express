@@ -10,8 +10,18 @@ export class BookService {
       title: string
       isbn?: string
       publishedAt?: number
+      publisher: {
+        connect: {
+          id: string
+        }
+      }
     } = {
       title: book.title,
+      publisher: {
+        connect: {
+          id: book.publisherId,
+        },
+      },
     }
 
     if (book.isbn !== undefined) data.isbn = book.isbn
@@ -40,6 +50,11 @@ export class BookService {
       title?: string
       isbn?: string
       publishedAt?: number
+      publisher?: {
+        connect: {
+          id: string
+        }
+      }
     } = {}
 
     if (book.title !== undefined) data.title = book.title
@@ -47,6 +62,14 @@ export class BookService {
     if (book.isbn !== undefined) data.isbn = book.isbn
 
     if (book.publishedAt !== undefined) data.publishedAt = book.publishedAt
+
+    if (book.publisherId !== undefined) {
+      data.publisher = {
+        connect: {
+          id: book.publisherId,
+        },
+      }
+    }
 
     const updatedBook = await this.bookRepository.updateBook(id, data)
 
