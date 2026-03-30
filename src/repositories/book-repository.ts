@@ -10,7 +10,13 @@ export class BookRepository {
   }
 
   async getBooks() {
-    return await this.prisma.book.findMany()
+    return await this.prisma.book.findMany({
+      include: {
+        publisher: {
+          select: { name: true },
+        },
+      },
+    })
   }
 
   async getBookById(id: string) {
