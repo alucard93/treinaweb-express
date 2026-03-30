@@ -2,6 +2,10 @@
 
 Este documento registra o setup usado neste repositorio.
 
+Para recriar a aplicacao completa no estado atual do projeto, veja tambem:
+
+- [recriar-aplicacao-completa.md](./recriar-aplicacao-completa.md)
+
 ## 1. Inicializacao do projeto
 
 Crie a pasta do projeto, abra o terminal e inicialize o `package.json` com as configuracoes padrao:
