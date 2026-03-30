@@ -13,10 +13,20 @@ datasource db {
 }
 
 model Book {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   title       String
-  isbn        String?  @unique
+  isbn        String?   @unique
   publishedAt Int?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  publisher   Publisher @relation(fields: [publisherId], references: [id])
+  publisherId String
+}
+
+model Publisher {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Book      Book[]
 }
